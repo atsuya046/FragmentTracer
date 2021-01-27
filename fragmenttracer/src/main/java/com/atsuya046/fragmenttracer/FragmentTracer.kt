@@ -5,6 +5,7 @@ import androidx.core.app.FrameMetricsAggregator
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.google.firebase.perf.FirebasePerformance
+import com.google.firebase.perf.logging.AndroidLogger
 import com.google.firebase.perf.metrics.Trace
 import java.util.*
 
@@ -12,6 +13,8 @@ import java.util.*
 * Firebase performance monitoring auto trace for Fragment
 */
 class FragmentPerformanceTracer {
+    private val logger = AndroidLogger.getInstance()
+
     private var callbacks: FragmentManager.FragmentLifecycleCallbacks? = null
     private val fragmentAggregatorMap = WeakHashMap<Fragment, FrameMetricsAggregator>()
     private val fragmentTraceMap = WeakHashMap<Fragment, Trace>()
@@ -56,7 +59,7 @@ class FragmentPerformanceTracer {
                     fragmentAggregatorMap[f] = frameMetricsAggregator
                     fragmentTraceMap[f] = trace
                 } catch (e: Exception) {
-                    // ignore
+                    logger.error("FirebasePerformance", e)
                 }
             }
 
@@ -123,7 +126,7 @@ class FragmentPerformanceTracer {
                         trace?.incrementMetric(FROZEN_FRAME_RATIO, frozenFrameRatio.toLong())
                     }
 
-                    Log.d("FirebasePerformance",
+                    logger.info("FirebasePerformance",
                         (StringBuilder(81 + performanceTag.length))
                             .append("sendScreenTrace name:").append(performanceTag)
                             .append(" $TOTAL_FRAME_COUNT:").append(trace?.getLongMetric(TOTAL_FRAME_COUNT))
@@ -134,7 +137,7 @@ class FragmentPerformanceTracer {
                             .toString()
                     )
                 } catch (e: Exception) {
-                    // ignore
+                    logger.error("FirebasePerformance", e)
                 } finally {
                     trace?.stop()
                 }
