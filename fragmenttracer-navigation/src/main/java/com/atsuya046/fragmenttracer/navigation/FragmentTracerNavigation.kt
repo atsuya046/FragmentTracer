@@ -20,7 +20,7 @@ fun Fragment.attachPerformanceTracer() {
     })
 }
 
-class FragmentTraceableNavHostFragment: NavHostFragment() {
+open class FragmentTraceableNavHostFragment: NavHostFragment() {
     init {
         this.attachPerformanceTracer()
     }
