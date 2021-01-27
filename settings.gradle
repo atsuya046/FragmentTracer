@@ -1,0 +1,3 @@
+include ':fragmenttracer-navigation'
+include ':fragmenttracer'
+rootProject.name = "FragmentTracer"
